@@ -2,7 +2,7 @@ services:
   - type: web
     name: registra-mente
     env: python
-    buildCommand: bash -c "apt-get update -y && apt-get install -y portaudio19-dev && pip install -r requirements.txt"
+    buildCommand: bash ./build.sh
     startCommand: streamlit run app.py
     envVars:
       - key: PYTHON_VERSION
