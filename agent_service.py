@@ -16,7 +16,13 @@ load_dotenv(find_dotenv())
 
 # Initialize Firebase Admin SDK (para garantir que esteja inicializado)
 if not firebase_admin._apps:
-    cred = credentials.Certificate("firebase_credentials.json")
+    # Carrega as credenciais da variável de ambiente
+    firebase_credentials_json = os.getenv("FIREBASE_CREDENTIALS")
+    if firebase_credentials_json:
+        cred = credentials.Certificate(json.loads(firebase_credentials_json))
+    else:
+        # Fallback para o arquivo local em desenvolvimento (opcional, remover para produção)
+        cred = credentials.Certificate("firebase_credentials.json")
     firebase_admin.initialize_app(cred)
 
 db = firestore.client() # Obtenha uma referência para o banco de dados Firestore
