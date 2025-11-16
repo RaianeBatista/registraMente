@@ -1,7 +1,6 @@
 
 import requests
 import json
-import speech_recognition as sr
 
 # Your Stackspot Credentials
 CLIENT_ID = "7498f99d-0bdc-4d72-bd6f-bc608adf1ec1"
@@ -48,29 +47,6 @@ def chat_with_agent(jwt_token, agent_chat_url, user_prompt):
     print() # New line after the full response
     return agent_message
 
-def get_voice_input():
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Pressione ENTER para começar a falar...")
-        input()
-        print("Ouvindo... Fale agora!")
-        try:
-            audio = r.listen(source, phrase_time_limit=10) # Limite de tempo para a frase
-            print("Processando áudio...")
-            text = r.recognize_google(audio, language="pt-BR")
-            
-            if "sair" in text.lower() or "parar" in text.lower() or "finalizar" in text.lower():
-                return "sair"
-
-            print(f"Você disse: {text}")
-            return text
-        except sr.UnknownValueError:
-            print("Não entendi o que você disse.")
-            return None # Retorna None para indicar que nada foi reconhecido
-        except sr.RequestError as e:
-            print(f"Não foi possível solicitar resultados do serviço de reconhecimento de fala; {e}")
-            return ""
-
 if __name__ == "__main__":
     try:
         print("Autenticando com Stackspot...")
@@ -79,12 +55,10 @@ if __name__ == "__main__":
         
         print("\nOlá! Como posso ajudar você hoje? Se quiser registrar algum evento ou acontecimento do seu dia, é só me contar!")
         
-        print("\nInicie seu chat com o agente. Pressione ENTER para falar, ou diga 'sair' para encerrar.")
+        print("\nInicie seu chat com o agente. Digite 'sair' para encerrar.")
         while True:
-            user_input = get_voice_input()
-            if user_input is None: # User pressed Enter without speaking, or no speech was recognized
-                continue
-            if user_input == "sair":
+            user_input = input("Você: ")
+            if user_input.lower() == "sair":
                 print("Encerrando o chat.")
                 break
             
