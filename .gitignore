@@ -85,3 +85,4 @@ memory.json
 
 # Firebase credentials
 firebase_credentials.json
+.streamlit/secrets.toml

@@ -83,7 +83,10 @@ st.write("**Olá! Este é o seu assistente pessoal**.  \nDescreva um evento, tar
 # Initialize Firebase Admin SDK (if not already initialized by main.py)
 # Removi a inicialização aqui, pois agent_service.py já lida com isso.
 if not firebase_admin._apps:
-    cred = credentials.Certificate("firebase_credentials.json")
+    # Load credentials from Streamlit secrets
+    import json
+    key_dict = json.loads(st.secrets["firebase_credentials"])
+    cred = credentials.Certificate(key_dict)
     firebase_admin.initialize_app(cred)
 
 db = firestore.client() # Obtenha uma referência para o banco de dados Firestore

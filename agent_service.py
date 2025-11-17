@@ -5,6 +5,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import re # Importar o módulo re para expressões regulares
 import dateparser # Importar dateparser
+import streamlit as st
 
 # Importar as ferramentas e utilitários que main.py usava
 from utils.basemodel2tool import base_model2tool
@@ -21,8 +22,15 @@ if not firebase_admin._apps:
     if firebase_credentials_json:
         cred = credentials.Certificate(json.loads(firebase_credentials_json))
     else:
-        # Fallback para o arquivo local em desenvolvimento (opcional, remover para produção)
-        cred = credentials.Certificate("firebase_credentials.json")
+        # Load credentials from Streamlit secrets
+        key_dict = json.loads(st.secrets["firebase_credentials"])
+        cred = credentials.Certificate(key_dict)
+    firebase_admin.initialize_app(cred)
+else:
+    # Load credentials from Streamlit secrets
+    import json
+    key_dict = json.loads(st.secrets["firebase_credentials"])
+    cred = credentials.Certificate(key_dict)
     firebase_admin.initialize_app(cred)
 
 db = firestore.client() # Obtenha uma referência para o banco de dados Firestore
